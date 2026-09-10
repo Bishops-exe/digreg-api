@@ -1,0 +1,36 @@
+[package]
+name = "digreg-api"
+version = "0.1.0"
+authors = ["Bishops-exe <Bishops-exe@users.noreply.github.com>"]
+edition = "2024"
+rust-version = "1.88"
+description = "Async client for the Digitales Register (digitalesregister.it) school platform API"
+repository = "https://github.com/Bishops-exe/digreg-api"
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+keywords = ["digitalesregister", "school", "api-client", "async"]
+categories = ["api-bindings", "web-programming::http-client"]
+exclude = ["/.github", "/.env.example", "/docs/calendar.resp.json"]
+
+[lints.clippy]
+# Pre-existing lints, allowed to keep `-D warnings` meaningful for new code.
+# Worth revisiting: flip the `Into` impl to `From`, box the large error variant.
+from_over_into = "allow"
+result_large_err = "allow"
+
+[dependencies]
+reqwest = { version = "0.13.4", features = ["cookies", "json"] }
+url = "2.5.8"
+thiserror = "2.0.20"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.151"
+monostate = "1.0.3"
+chrono = { version = "0.4.45", features = ["serde"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt", "rt-multi-thread", "sync"] }
+dotenvy = "0.15"
+
+[profile.release]
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"

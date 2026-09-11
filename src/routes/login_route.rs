@@ -45,11 +45,15 @@ pub enum LoginResponse {
         error: MustBe!("user_not_found")
     },
 
+    TwoFactorNeeded {
+        error: MustBe!("two_factor_needed")
+    },
+
     Failure {
         #[serde(rename = "loggedIn")]
         logged_in: MustBe!(false),
         error: String,
-        message: String,
+        message: Option<String>,
     },
 }
 
@@ -65,6 +69,9 @@ pub enum SchoolLoginErrorInner {
     #[error("the user was not found")]
     InvalidUser,
 
+    #[error("2fa needed")]
+    TwoFactorNeeded,
+
     #[error("[{error}] {message}")]
     OtherError { error: String, message: String },
 }
@@ -76,9 +83,11 @@ impl Into<Result<(), SchoolLoginErrorInner>> for LoginResponse {
             LoginResponse::PasswordExpired { .. } => Err(SchoolLoginErrorInner::PasswordExpired),
             LoginResponse::InvalidPassword { .. } => Err(SchoolLoginErrorInner::InvalidPassword),
             LoginResponse::InvalidUser { .. } => Err(SchoolLoginErrorInner::InvalidUser),
+            LoginResponse::TwoFactorNeeded { .. } => Err(SchoolLoginErrorInner::TwoFactorNeeded),
             LoginResponse::Failure { error, message, .. } => {
-                Err(SchoolLoginErrorInner::OtherError { error, message })
+                Err(SchoolLoginErrorInner::OtherError { error: error.clone(), message: message.unwrap_or(error) })
             }
+
         }
     }
 }

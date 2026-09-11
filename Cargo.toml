@@ -1,6 +1,6 @@
 [package]
 name = "digreg-api"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Bishops-exe <Bishops-exe@users.noreply.github.com>"]
 edition = "2024"
 rust-version = "1.88"
